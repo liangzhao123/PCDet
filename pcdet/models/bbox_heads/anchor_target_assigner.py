@@ -355,19 +355,15 @@ class TargetAssigner(object):
             'bbox_outside_weights': [t['bbox_outside_weights'] for t in targets_list],
         }
         # bbox_targets: (H, W, num_anchors_per_loc, code_size)
-        targets_dict['bbox_targets'] = np.concatenate([v.reshape(*feature_map_size, -1, self.box_coder.code_size)
+        targets_dict['bbox_targets'] = np.concatenate([v.reshape(-1, self.box_coder.code_size)
                                                        for v in targets_dict['bbox_targets']], axis=-2)
-        targets_dict['bbox_src_targets'] = np.concatenate([v.reshape(*feature_map_size, -1, self.box_coder.code_size)
+        targets_dict['bbox_src_targets'] = np.concatenate([v.reshape( -1, self.box_coder.code_size)
                                                            for v in targets_dict['bbox_src_targets']], axis=-2)
-        targets_dict['labels'] = np.concatenate([v.reshape(*feature_map_size, -1)
+        targets_dict['labels'] = np.concatenate([v.reshape( -1)
                                                  for v in targets_dict['labels']], axis=-1)
-        targets_dict['bbox_outside_weights'] = np.concatenate([v.reshape(*feature_map_size, -1)
+        targets_dict['bbox_outside_weights'] = np.concatenate([v.reshape(-1)
                                                                for v in targets_dict['bbox_outside_weights']], axis=-1)
 
-        targets_dict['bbox_targets'] = targets_dict['bbox_targets'].reshape(-1, self.box_coder.code_size)
-        targets_dict['bbox_src_targets'] = targets_dict['bbox_src_targets'].reshape(-1, self.box_coder.code_size)
-        targets_dict['labels'] = targets_dict['labels'].reshape(-1)
-        targets_dict['bbox_outside_weights'] = targets_dict['bbox_outside_weights'].reshape(-1)
 
         return targets_dict
 
